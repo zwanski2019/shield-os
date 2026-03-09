@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Shield OS — Deployment Guide</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@700;900&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#050510;color:#ccd;font-family:'Share Tech Mono',monospace;padding:32px 16px;line-height:1.6;}
+  ::-webkit-scrollbar{width:4px;}::-webkit-scrollbar-thumb{background:#00f0ff33;}
+  h1{font-family:'Orbitron',monospace;font-size:clamp(22px,5vw,40px);letter-spacing:8px;color:#fff;text-align:center;margin-bottom:4px;}
+  .sub{text-align:center;font-size:9px;letter-spacing:4px;color:#00f0ff;margin-bottom:40px;}
+  .section{background:#08081a;border:1px solid #0d0d2a;border-top:2px solid;margin-bottom:24px;padding:24px;max-width:860px;margin-left:auto;margin-right:auto;margin-bottom:24px;}
+  .section-vercel{border-top-color:#00f0ff;}
+  .section-cloudflare{border-top-color:#ff6600;}
+  .section-netlify{border-top-color:#00c7b7;}
+  .section-github{border-top-color:#6e40c9;}
+  .section-setup{border-top-color:#00ff88;}
+  .section-title{font-family:'Orbitron',monospace;font-size:11px;letter-spacing:3px;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+  .platform-badge{font-size:7px;padding:2px 8px;border:1px solid;letter-spacing:2px;}
+  .step{margin-bottom:20px;}
+  .step-num{font-family:'Orbitron',monospace;font-size:10px;color:#00f0ff;letter-spacing:2px;margin-bottom:6px;}
+  .step-desc{font-size:10px;color:#556;margin-bottom:8px;line-height:1.8;}
+  pre{background:#030308;border:1px solid #0d0d2a;border-left:3px solid #00f0ff;padding:12px 16px;overflow-x:auto;font-size:11px;color:#ccd;position:relative;margin:0;}
+  pre.orange{border-left-color:#ff6600;}
+  pre.teal{border-left-color:#00c7b7;}
+  pre.purple{border-left-color:#6e40c9;}
+  pre.green{border-left-color:#00ff88;}
+  .copy-btn{position:absolute;top:8px;right:8px;background:transparent;border:1px solid #0d0d2a;color:#445;font-family:'Share Tech Mono',monospace;font-size:8px;padding:3px 8px;cursor:pointer;letter-spacing:1px;transition:all 0.2s;}
+  .copy-btn:hover{border-color:#00f0ff;color:#00f0ff;}
+  .note{background:#ffcc000a;border:1px solid #ffcc0022;padding:10px 14px;font-size:10px;color:#667;line-height:1.7;margin-top:10px;}
+  .note-green{background:#00ff880a;border-color:#00ff8822;color:#00ff8888;}
+  .note-red{background:#ff003c0a;border-color:#ff003c22;color:#ff003c88;}
+  .tag{display:inline-block;font-size:8px;padding:2px 8px;border:1px solid;letter-spacing:2px;margin-right:6px;margin-bottom:4px;vertical-align:middle;}
+  .free{color:#00ff88;border-color:#00ff8844;}
+  .fast{color:#00f0ff;border-color:#00f0ff44;}
+  .easy{color:#ffcc00;border-color:#ffcc0044;}
+  hr{border:none;border-top:1px solid #0d0d2a;margin:12px 0;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:600px){.grid2{grid-template-columns:1fr;}}
+  .comparison{max-width:860px;margin:0 auto 24px;}
+  table{width:100%;border-collapse:collapse;font-size:10px;}
+  th{font-family:'Orbitron',monospace;font-size:8px;letter-spacing:2px;color:#445;text-align:left;padding:8px;border-bottom:1px solid #0d0d2a;}
+  td{padding:8px;border-bottom:1px solid #050518;color:#99a;}
+  td:first-child{color:#ccd;}
+  tr:hover td{background:#0a0a18;}
+  .dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:middle;}
+  .dot-g{background:#00ff88;box-shadow:0 0 6px #00ff88;}
+  .dot-y{background:#ffcc00;box-shadow:0 0 6px #ffcc00;}
+  .dot-r{background:#ff003c;box-shadow:0 0 6px #ff003c;}
+</style>
+</head>
+<body>
+
+<h1>SHIELD OS</h1>
+<div class="sub">DEPLOYMENT GUIDE — ALL PLATFORMS — COPY &amp; PASTE READY</div>
+
+<!-- ═══ STEP 0: PROJECT SETUP ═══ -->
+<div class="section section-setup" style="max-width:860px;margin:0 auto 24px;">
+  <div class="section-title" style="color:#00ff88;">
+    <span>⚙️</span> STEP 0 — PROJECT SETUP (DO THIS FIRST, ONCE)
+  </div>
+
+  <div class="step">
+    <div class="step-num">1 — INSTALL NODE.JS</div>
+    <div class="step-desc">Download from <strong style="color:#ccd">nodejs.org</strong> → Install LTS version. Verify:</div>
+    <div style="position:relative"><pre class="green">node --version
+npm --version</pre></div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2 — CREATE REACT PROJECT</div>
+    <div class="step-desc">Run this once. Creates a Vite-powered React app in a folder called <code style="color:#00f0ff">shield-os</code>:</div>
+    <div style="position:relative"><pre class="green">npm create vite@latest shield-os -- --template react
+cd shield-os
+npm install</pre></div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3 — REPLACE THE APP FILE</div>
+    <div class="step-desc">Delete the default App content and paste your <code style="color:#00f0ff">shield-os.jsx</code> content into:</div>
+    <div style="position:relative"><pre class="green">src/App.jsx   ← paste the entire shield-os.jsx content here</pre></div>
+    <div class="note">Make sure the last line is: <code style="color:#00ff88">export default function ShieldOS() { ... }</code> — it already is if you used the upgraded file.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4 — UPDATE MAIN ENTRY</div>
+    <div class="step-desc">Open <code style="color:#00f0ff">src/main.jsx</code> and replace everything with:</div>
+    <div style="position:relative"><pre class="green">import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import ShieldOS from './App'
+
+createRoot(document.getElementById('root')).render(
+  &lt;StrictMode&gt;
+    &lt;ShieldOS /&gt;
+  &lt;/StrictMode&gt;
+)</pre></div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5 — TEST LOCALLY</div>
+    <div style="position:relative"><pre class="green">npm run dev</pre></div>
+    <div class="note note-green">✓ Open http://localhost:5173 — should show Shield OS running perfectly.</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">6 — PUSH TO GITHUB (needed for Vercel / Cloudflare / Netlify auto-deploy)</div>
+    <div style="position:relative"><pre class="green">git init
+git add .
+git commit -m "Shield OS v4.0"
+# Then create a repo on github.com and run the commands GitHub shows you</pre></div>
+  </div>
+</div>
+
+<!-- ═══ COMPARISON TABLE ═══ -->
+<div class="comparison">
+  <table>
+    <tr>
+      <th>PLATFORM</th><th>SPEED</th><th>FREE TIER</th><th>CUSTOM DOMAIN</th><th>DIFFICULTY</th><th>BEST FOR</th>
+    </tr>
+    <tr>
+      <td>Vercel</td>
+      <td><span class="dot dot-g"></span>~30 sec</td>
+      <td><span class="dot dot-g"></span>Unlimited</td>
+      <td><span class="dot dot-g"></span>Yes</td>
+      <td><span class="dot dot-g"></span>Easiest</td>
+      <td>Fastest deploy ever</td>
+    </tr>
+    <tr>
+      <td>Cloudflare Pages</td>
+      <td><span class="dot dot-g"></span>~1 min</td>
+      <td><span class="dot dot-g"></span>Unlimited reqs</td>
+      <td><span class="dot dot-g"></span>Yes</td>
+      <td><span class="dot dot-g"></span>Easy</td>
+      <td>Best global CDN performance</td>
+    </tr>
+    <tr>
+      <td>Netlify</td>
+      <td><span class="dot dot-g"></span>~1 min</td>
+      <td><span class="dot dot-y"></span>100GB/month</td>
+      <td><span class="dot dot-g"></span>Yes</td>
+      <td><span class="dot dot-g"></span>Easy</td>
+      <td>Best drag-and-drop option</td>
+    </tr>
+    <tr>
+      <td>GitHub Pages</td>
+      <td><span class="dot dot-y"></span>~3 min</td>
+      <td><span class="dot dot-g"></span>Unlimited</td>
+      <td><span class="dot dot-g"></span>Yes</td>
+      <td><span class="dot dot-y"></span>Medium</td>
+      <td>No extra accounts needed</td>
+    </tr>
+  </table>
+</div>
+
+<!-- ═══ VERCEL ═══ -->
+<div class="section section-vercel">
+  <div class="section-title" style="color:#00f0ff;">
+    <span>▲</span> VERCEL
+    <span class="tag free">FREE</span><span class="tag fast">FASTEST</span><span class="tag easy">EASIEST</span>
+  </div>
+
+  <div class="step">
+    <div class="step-num">METHOD A — CLI (1 COMMAND)</div>
+    <div class="step-desc">Install Vercel CLI globally and deploy — that's it:</div>
+    <div style="position:relative"><pre># Install once globally
+npm install -g vercel
+
+# Inside your shield-os folder:
+vercel
+
+# Answer the prompts:
+# ? Set up and deploy? → Y
+# ? Which scope? → your username
+# ? Link to existing project? → N
+# ? Project name → shield-os
+# ? In which directory is your code? → ./
+# ? Override settings? → N
+# Done! Your live URL appears instantly.</pre></div>
+    <div class="note note-green">✓ Live URL: https://shield-os-xxxx.vercel.app — Done in ~20 seconds.</div>
+  </div>
+
+  <hr/>
+
+  <div class="step">
+    <div class="step-num">METHOD B — GITHUB AUTO-DEPLOY</div>
+    <div class="step-desc">Connect once, every git push auto-deploys.</div>
+    <div style="position:relative"><pre>1. Go to: vercel.com → Sign up with GitHub (free)
+2. Click "Add New Project"
+3. Import your shield-os GitHub repo
+4. Settings:
+   Framework Preset: Vite
+   Build Command:    npm run build
+   Output Directory: dist
+5. Click "Deploy"</pre></div>
+    <div class="note note-green">✓ Every <code>git push</code> = instant new deployment automatically.</div>
+  </div>
+</div>
+
+<!-- ═══ CLOUDFLARE ═══ -->
+<div class="section section-cloudflare">
+  <div class="section-title" style="color:#ff6600;">
+    <span>☁</span> CLOUDFLARE PAGES
+    <span class="tag free">FREE</span><span class="tag fast">BEST CDN</span>
+  </div>
+
+  <div class="step">
+    <div class="step-num">METHOD A — GITHUB CONNECT</div>
+    <div style="position:relative"><pre class="orange">1. Go to: pages.cloudflare.com → Sign up (free)
+2. Click "Create a project" → "Connect to Git"
+3. Authorize GitHub → Select your shield-os repo
+4. Configure build:
+   Project name:     shield-os
+   Production branch: main
+   Framework preset:  Vite
+   Build command:    npm run build
+   Build output dir: dist
+5. Click "Save and Deploy"</pre></div>
+    <div class="note note-green">✓ Live at: shield-os.pages.dev — Unlimited requests, global CDN.</div>
+  </div>
+
+  <hr/>
+
+  <div class="step">
+    <div class="step-num">METHOD B — WRANGLER CLI</div>
+    <div style="position:relative"><pre class="orange"># Build first
+npm run build
+
+# Install Cloudflare CLI
+npm install -g wrangler
+
+# Login to Cloudflare
+wrangler login
+
+# Deploy the dist folder directly
+wrangler pages deploy dist --project-name=shield-os</pre></div>
+    <div class="note">Repeat the last command every time you want to redeploy.</div>
+  </div>
+</div>
+
+<!-- ═══ NETLIFY ═══ -->
+<div class="section section-netlify">
+  <div class="section-title" style="color:#00c7b7;">
+    <span>◆</span> NETLIFY
+    <span class="tag free">FREE</span><span class="tag easy">DRAG &amp; DROP</span>
+  </div>
+
+  <div class="step">
+    <div class="step-num">METHOD A — DRAG &amp; DROP (ZERO CLI)</div>
+    <div style="position:relative"><pre class="teal"># Build the project
+npm run build
+
+# This creates a "dist" folder in your shield-os directory
+# 1. Go to: app.netlify.com → Sign up (free)
+# 2. Click "Sites" → Drag and drop your ENTIRE "dist" folder onto the page
+# Done. Live in 10 seconds.</pre></div>
+    <div class="note note-green">✓ Instant live URL. No CLI, no config, no GitHub needed. Just drag the folder.</div>
+  </div>
+
+  <hr/>
+
+  <div class="step">
+    <div class="step-num">METHOD B — CLI</div>
+    <div style="position:relative"><pre class="teal">npm install -g netlify-cli
+netlify login
+npm run build
+netlify deploy --prod --dir=dist</pre></div>
+  </div>
+
+  <hr/>
+
+  <div class="step">
+    <div class="step-num">METHOD C — GITHUB AUTO-DEPLOY</div>
+    <div style="position:relative"><pre class="teal">1. app.netlify.com → "Add new site" → "Import an existing project"
+2. Connect GitHub → Select shield-os repo
+3. Build settings:
+   Build command:    npm run build
+   Publish directory: dist
+4. Click "Deploy site"</pre></div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">REQUIRED — CREATE netlify.toml (for React Router)</div>
+    <div class="step-desc">Create this file in your project root — prevents 404 on page refresh:</div>
+    <div style="position:relative"><pre class="teal">[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200</pre></div>
+    <div class="note">Save as <code style="color:#ccd">netlify.toml</code> in the root of your project (same level as package.json).</div>
+  </div>
+</div>
+
+<!-- ═══ GITHUB PAGES ═══ -->
+<div class="section section-github">
+  <div class="section-title" style="color:#6e40c9;">
+    <span>⬡</span> GITHUB PAGES
+    <span class="tag free">FREE</span>
+  </div>
+
+  <div class="step">
+    <div class="step-num">STEP 1 — UPDATE vite.config.js</div>
+    <div class="step-desc">Open <code style="color:#6e40c9">vite.config.js</code> and set the base to your repo name:</div>
+    <div style="position:relative"><pre class="purple">import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  base: '/shield-os/',   // ← your GitHub repo name here
+})</pre></div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">STEP 2 — INSTALL gh-pages PACKAGE</div>
+    <div style="position:relative"><pre class="purple">npm install --save-dev gh-pages</pre></div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">STEP 3 — ADD DEPLOY SCRIPTS TO package.json</div>
+    <div class="step-desc">Open <code style="color:#6e40c9">package.json</code> and add these two lines inside <code>"scripts"</code>:</div>
+    <div style="position:relative"><pre class="purple">"scripts": {
+  "dev": "vite",
+  "build": "vite build",
+  "preview": "vite preview",
+  "predeploy": "npm run build",     ← ADD THIS
+  "deploy": "gh-pages -d dist"      ← ADD THIS
+}</pre></div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">STEP 4 — DEPLOY</div>
+    <div style="position:relative"><pre class="purple">npm run deploy</pre></div>
+    <div class="note note-green">✓ Live at: https://YOUR-USERNAME.github.io/shield-os/</div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">STEP 5 — ENABLE IN GITHUB SETTINGS</div>
+    <div style="position:relative"><pre class="purple">1. Go to your repo on github.com
+2. Settings → Pages
+3. Branch: gh-pages → /(root)
+4. Save → Wait 1-2 minutes</pre></div>
+  </div>
+</div>
+
+<!-- ═══ CUSTOM DOMAIN ═══ -->
+<div class="section" style="max-width:860px;margin:0 auto 24px;border-top-color:#ffcc00;">
+  <div class="section-title" style="color:#ffcc00;"><span>🌐</span> CUSTOM DOMAIN (ALL PLATFORMS)</div>
+  <div class="step-desc" style="font-size:10px;color:#556;margin-bottom:16px;">
+    Want <code style="color:#ccd">shieldos.app</code> instead of <code style="color:#ccd">shield-os.vercel.app</code>? Buy a domain for ~$10/year on Namecheap or Cloudflare Registrar, then:
+  </div>
+  <div style="position:relative"><pre>Vercel:          Project → Settings → Domains → Add domain
+Cloudflare Pages: Project → Custom domains → Add
+Netlify:         Site → Domain management → Add custom domain
+GitHub Pages:    Settings → Pages → Custom domain → Enter domain
+
+# Then add this DNS record at your domain registrar:
+Type: CNAME
+Name: @ (or www)
+Value: [the URL they give you, e.g. shield-os.vercel.app]</pre></div>
+  <div class="note note-green">✓ SSL/HTTPS is automatic and free on all these platforms.</div>
+</div>
+
+<!-- ═══ QUICK REFERENCE ═══ -->
+<div class="section" style="max-width:860px;margin:0 auto 24px;border-top-color:#00f0ff;">
+  <div class="section-title" style="color:#00f0ff;"><span>⚡</span> ULTRA QUICK REFERENCE</div>
+  <div class="grid2">
+    <div>
+      <div style="font-size:9px;letter-spacing:3px;color:#445;margin-bottom:8px;">VERCEL (FASTEST)</div>
+      <div style="position:relative"><pre>npm i -g vercel
+vercel</pre></div>
+    </div>
+    <div>
+      <div style="font-size:9px;letter-spacing:3px;color:#445;margin-bottom:8px;">NETLIFY (EASIEST)</div>
+      <div style="position:relative"><pre>npm run build
+# drag "dist" folder to netlify</pre></div>
+    </div>
+    <div>
+      <div style="font-size:9px;letter-spacing:3px;color:#445;margin-bottom:8px;">CLOUDFLARE</div>
+      <div style="position:relative"><pre>npm run build
+wrangler pages deploy dist</pre></div>
+    </div>
+    <div>
+      <div style="font-size:9px;letter-spacing:3px;color:#445;margin-bottom:8px;">GITHUB PAGES</div>
+      <div style="position:relative"><pre>npm run deploy</pre></div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;font-size:8px;color:#112;letter-spacing:4px;padding:16px 0;">
+  SHIELD OS — DEPLOYMENT GUIDE — BUILT FOR THE PEOPLE ◈ STAY FREE
+</div>
+
+<script>
+  // Add copy buttons to all pre blocks
+  document.querySelectorAll('pre').forEach(pre => {
+    const btn = document.createElement('button');
+    btn.className = 'copy-btn';
+    btn.textContent = 'COPY';
+    btn.onclick = () => {
+      navigator.clipboard.writeText(pre.textContent.replace(/\n$/, ''));
+      btn.textContent = '✓ DONE';
+      setTimeout(() => btn.textContent = 'COPY', 1500);
+    };
+    pre.style.paddingTop = '28px';
+    pre.parentNode.style.position = 'relative';
+    pre.parentNode.appendChild(btn);
+  });
+</script>
+</body>
+</html>
